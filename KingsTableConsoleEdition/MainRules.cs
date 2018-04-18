@@ -14,15 +14,22 @@ namespace KingsTableConsoleEdition
         public void StartNewGame(Board newBoard)
         {
             board = newBoard;
-            FindCorners();
-            MarkCornersAsGoals();
+            if (board.heightWidth == 11)
+            {
+                FindCorners();
+                MarkCornersAsGoals();
+            }else{
+                Console.WriteLine("");
+                Console.WriteLine("The current board is not compatible with this rule type");
+                Console.WriteLine("The rules require board height/width of 11");
+                Console.WriteLine("");
+            }
         }
 
         void FindCorners()
         {
-            int boardDimension = board.heightWidth;
-            corners = new[,] {{0,0}, {0,boardDimension-1}, {boardDimension-1,0},
-                              {boardDimension-1,boardDimension-1} };
+                corners = new[,] {{0,0}, {0,10}, {10,0},
+                              {10,10} };
         }
 
         void MarkCornersAsGoals()
