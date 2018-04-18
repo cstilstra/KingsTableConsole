@@ -15,9 +15,23 @@ namespace KingsTableConsoleEdition
             String separator = "|";
 
             Console.WriteLine("");
+            // build top guide line
+            StringBuilder builder = new StringBuilder();
+            builder.Append("    ");
+            for (int j = 0; j < board.GetLength(1); j++)
+            {
+                builder.Append((char)(j + 97)); // convert to letters
+                builder.Append(" ");
+            }
+            Console.WriteLine(builder);
             for (int i = 0; i < board.GetLength(0); i++)
             {
-                StringBuilder builder = new StringBuilder();
+                builder = new StringBuilder();
+                // add left guide line entry
+                if (i < 9) builder.Append(" ");
+                builder.Append(i + 1);
+                builder.Append(" ");
+                // add rest of line
                 builder.Append(separator);
                 for (int j = 0; j < board.GetLength(1); j++)
                 {

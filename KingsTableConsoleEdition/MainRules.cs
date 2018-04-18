@@ -7,8 +7,11 @@ namespace KingsTableConsoleEdition
         Board board;
         int[,] corners;
 
+        char goalChar;
+
         public MainRules()
         {
+            goalChar = 'X';
         }
 
         public void StartNewGame(Board newBoard)
@@ -34,11 +37,10 @@ namespace KingsTableConsoleEdition
 
         void MarkCornersAsGoals()
         {
-            Console.WriteLine("corners.GetLength(0) = " + corners.GetLength(0).ToString());
             for (int i = 0; i < corners.GetLength(0); i++)
             {
                 int[] position = { corners[i, 0], corners[i, 1] };
-                board.SetPositionToValue(position, 'X');
+                board.SetPositionToValue(position, goalChar);
             }
         }
     }

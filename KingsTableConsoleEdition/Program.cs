@@ -19,7 +19,6 @@ namespace KingsTableConsoleEdition
             rules.StartNewGame(board);
 
             output.ShowBoard(board.GetBoard());
-            output.ShowResult();
         }
     }
 }
