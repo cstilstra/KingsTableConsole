@@ -15,14 +15,6 @@ namespace KingsTableConsoleEdition
         {
             heightWidth = height;
             currentBoard = new char[heightWidth, heightWidth];
-            //// fill board with empty indicators
-            //for (int i = 0; i < heightWidth; i++)
-            //{
-            //    for (int j = 0; j < heightWidth; j++)
-            //    {
-            //        currentBoard[i, j] = '_';
-            //    }
-            //}
         }
 
         public void SetBoard(char[,] newBoard){
