@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using KingsTableConsoleEdition.Interfaces;
 namespace KingsTableConsoleEdition
 {
@@ -16,12 +17,13 @@ namespace KingsTableConsoleEdition
             Console.WriteLine("");
             for (int i = 0; i < board.GetLength(0); i++)
             {
-                Console.Write(separator);
+                StringBuilder builder = new StringBuilder();
+                builder.Append(separator);
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    Console.Write(board[i, j].ToString() + separator);
+                    builder.Append(board[i, j].ToString()).Append(separator);
                 }
-                Console.WriteLine("");
+                Console.WriteLine(builder);
             }
             Console.WriteLine("");
         }

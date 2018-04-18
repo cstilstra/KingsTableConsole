@@ -5,17 +5,21 @@ namespace KingsTableConsoleEdition
     class MainClass
     {
 
-        static IOutput consoleOutput;
+        static IOutput output;
         static Board board;
+        static IRules rules;
 
         public static void Main(string[] args)
         {
-            consoleOutput = new ConsoleOutput();
+            output = new ConsoleOutput();
             board = new Board();
-            board.MakeBoard(11);
+            rules = new MainRules();
 
-            consoleOutput.ShowBoard(board.GetBoard());
-            consoleOutput.ShowResult();
+            board.MakeBoard(11);
+            rules.StartNewGame(board);
+
+            output.ShowBoard(board.GetBoard());
+            output.ShowResult();
         }
     }
 }
