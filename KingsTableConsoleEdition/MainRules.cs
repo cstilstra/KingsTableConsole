@@ -21,6 +21,7 @@ namespace KingsTableConsoleEdition
             {
                 FindCorners();
                 MarkCornersAsGoals();
+                PlaceAttackers();
             }else{
                 Console.WriteLine("");
                 Console.WriteLine("The current board is not compatible with this rule type");
@@ -42,6 +43,30 @@ namespace KingsTableConsoleEdition
                 int[] position = { corners[i, 0], corners[i, 1] };
                 board.SetPositionToValue(position, goalChar);
             }
+        }
+
+        void PlaceAttackers()
+        {
+            int[] position;
+            for (int i = 3; i < 8; i++)
+            {
+                position = new int[] { i, 0 };
+                board.SetPositionToValue(position, 'A');
+                position = new int[] { i, 10 };
+                board.SetPositionToValue(position, 'A');
+                position = new int[] { 0, i };
+                board.SetPositionToValue(position, 'A');
+                position = new int[] { 10, i };
+                board.SetPositionToValue(position, 'A');
+            }
+            position = new int[] { 5, 1 };
+            board.SetPositionToValue(position, 'A');
+            position = new int[] { 5, 9 };
+            board.SetPositionToValue(position, 'A');
+            position = new int[] { 1, 5 };
+            board.SetPositionToValue(position, 'A');
+            position = new int[] { 9, 5 };
+            board.SetPositionToValue(position, 'A');
         }
     }
 }
