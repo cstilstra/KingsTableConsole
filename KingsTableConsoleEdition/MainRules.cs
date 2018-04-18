@@ -5,13 +5,14 @@ namespace KingsTableConsoleEdition
     public class MainRules : IRules
     {
         Board board;
-        Board emptyBoard;
         int[,] corners;
+        int[] throne;
 
-        char goalChar, throneChar, attackerChar, defenderChar, kingChar;
+        char emptyChar, goalChar, throneChar, attackerChar, defenderChar, kingChar;
 
         public MainRules()
         {
+            emptyChar = '_';
             goalChar = 'X';
             throneChar = '+';
             attackerChar = 'A';
@@ -24,13 +25,12 @@ namespace KingsTableConsoleEdition
             board = newBoard;
             if (board.heightWidth == 11)
             {
-                FindCorners();
+                CreateEmptySpaces();
                 MarkCornersAsGoals();
-                MarkThrone();
-                emptyBoard = board;
+                MarkCenterAsThrone();
                 PlaceAttackers();
                 PlaceDefenders();
-                PlaceKing();
+                PlaceKingOnThrone();
             }else{
                 Console.WriteLine("");
                 Console.WriteLine("The current board is not compatible with this rule type");
@@ -39,14 +39,21 @@ namespace KingsTableConsoleEdition
             }
         }
 
-        void FindCorners()
+        void CreateEmptySpaces()
         {
-                corners = new[,] {{0,0}, {0,10}, {10,0},
-                              {10,10} };
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    int[] position = { i, j };
+                    board.SetPositionToValue(position, emptyChar);
+                }
+            }
         }
 
         void MarkCornersAsGoals()
         {
+            FindCorners();
             for (int i = 0; i < corners.GetLength(0); i++)
             {
                 int[] position = { corners[i, 0], corners[i, 1] };
@@ -54,10 +61,16 @@ namespace KingsTableConsoleEdition
             }
         }
 
-        void MarkThrone()
+        void FindCorners()
         {
-            int[] position = { 5, 5};
-            board.SetPositionToValue(position, throneChar);
+            corners = new[,] {{0,0}, {0,10}, {10,0},
+                              {10,10} };
+        }
+
+        void MarkCenterAsThrone()
+        {
+            throne = new int[]{ 5, 5};
+            board.SetPositionToValue(throne, throneChar);
         }
 
         void PlaceAttackers()
@@ -112,10 +125,10 @@ namespace KingsTableConsoleEdition
             board.SetPositionToValue(position, defenderChar);
         }
 
-        void PlaceKing()
+        void PlaceKingOnThrone()
         {
             int[] position = new int[] { 5, 5 };
-            board.SetPositionToValue(position, kingChar);
+            board.SetPositionToValue(throne, kingChar);
         }
     }
 }
