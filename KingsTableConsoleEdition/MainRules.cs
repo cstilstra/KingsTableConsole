@@ -8,6 +8,7 @@ namespace KingsTableConsoleEdition
         int[,] corners;
         int[] throne;
         IPlayer attacker, defender;
+        bool gameOver;
 
         char emptyChar, goalChar, throneChar, attackerChar, defenderChar, kingChar;
 
@@ -19,16 +20,27 @@ namespace KingsTableConsoleEdition
             attackerChar = 'A';
             defenderChar = 'D';
             kingChar = 'K';
+
+            gameOver = false;
         }
 
+        public void PrintIntro(IOutput output)
+        {
+            output.PrintString("-This is a custom King's Table ruleset-");
+            output.PrintString("-designed by c.s.tilstra and IVSugz-");
+        }
         public bool PrepareNewGame(Board newBoard, IInput input)
         {
-            board = newBoard;
+            //TODO: Rules should create the board rather than have it passed in
+            // and the board should be owned by Rules rather than Program
+            board = newBoard; 
             if (board.heightWidth == 11)
             {
+                //TODO: Move to Board
                 CreateEmptySpaces();
                 MarkCornersAsGoals();
                 MarkCenterAsThrone();
+                // end Move to Board
                 PlaceAttackers();
                 PlaceDefenders();
                 PlaceKingOnThrone();
@@ -42,6 +54,8 @@ namespace KingsTableConsoleEdition
                 return false;
             }
         }
+
+        // Non Interface defined functions below
 
         void CreateEmptySpaces()
         {
@@ -144,8 +158,24 @@ namespace KingsTableConsoleEdition
             prompt = "Please type the name of the Defending player:";
             defender.SetName(input.GetStringFromPlayer(prompt));
 
+            //TODO: remove
             Console.WriteLine("Attacker: " + attacker.GetName());
             Console.WriteLine("Defender: " + defender.GetName());
+        }
+
+        public bool GameContinues()
+        {
+            return true;
+        }
+
+        public bool MoveIsValid()
+        {
+            return true;
+        }
+
+        public void ApplyMove(string[] move)
+        {
+            
         }
     }
 }

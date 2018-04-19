@@ -10,7 +10,10 @@ namespace KingsTableConsoleEdition
 
         public string[] GetMoveFromPlayer()
         {
-            throw new NotImplementedException();
+            Console.WriteLine("Press 'Enter' twice.");
+            string string1 = Console.ReadLine();
+            string string2 = Console.ReadLine();
+            return new string[] { string1, string2 };
         }
 
         public string GetStringFromPlayer(string prompt)
