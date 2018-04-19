@@ -7,6 +7,7 @@ namespace KingsTableConsoleEdition
         Board board;
         int[,] corners;
         int[] throne;
+        IPlayer attacker, defender;
 
         char emptyChar, goalChar, throneChar, attackerChar, defenderChar, kingChar;
 
@@ -20,7 +21,7 @@ namespace KingsTableConsoleEdition
             kingChar = 'K';
         }
 
-        public void StartNewGame(Board newBoard)
+        public bool PrepareNewGame(Board newBoard, IInput input)
         {
             board = newBoard;
             if (board.heightWidth == 11)
@@ -31,11 +32,14 @@ namespace KingsTableConsoleEdition
                 PlaceAttackers();
                 PlaceDefenders();
                 PlaceKingOnThrone();
+                CreatePlayers(input);
+                return true;
             }else{
                 Console.WriteLine("");
                 Console.WriteLine("The current board is not compatible with this rule type");
                 Console.WriteLine("The rules require board height/width of 11");
                 Console.WriteLine("");
+                return false;
             }
         }
 
@@ -129,6 +133,19 @@ namespace KingsTableConsoleEdition
         {
             int[] position = new int[] { 5, 5 };
             board.SetPositionToValue(throne, kingChar);
+        }
+
+        void CreatePlayers(IInput input)
+        {
+            attacker = new HumanPlayer();
+            string prompt = "Please type the name of the Attacking player:";
+            attacker.SetName(input.GetStringFromPlayer(prompt));
+            defender = new HumanPlayer();
+            prompt = "Please type the name of the Defending player:";
+            defender.SetName(input.GetStringFromPlayer(prompt));
+
+            Console.WriteLine("Attacker: " + attacker.GetName());
+            Console.WriteLine("Defender: " + defender.GetName());
         }
     }
 }

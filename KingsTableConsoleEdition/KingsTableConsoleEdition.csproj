@@ -39,6 +39,10 @@
     <Compile Include="Interfaces\IRules.cs" />
     <Compile Include="MainRules.cs" />
     <Compile Include="Board.cs" />
+    <Compile Include="HumanPlayer.cs" />
+    <Compile Include="Interfaces\IPlayer.cs" />
+    <Compile Include="Interfaces\IInput.cs" />
+    <Compile Include="ConsoleInput.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />

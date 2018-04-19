@@ -35,7 +35,8 @@ namespace KingsTableConsoleEdition
                 builder.Append(separator);
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
-                    builder.Append(board[i, j].ToString()).Append(separator);
+                    builder.Append(board[i, j].ToString());
+                    builder.Append(separator);
                 }
                 Console.WriteLine(builder);
             }

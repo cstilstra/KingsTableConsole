@@ -6,19 +6,25 @@ namespace KingsTableConsoleEdition
     {
 
         static IOutput output;
+        static IInput input;
         static Board board;
         static IRules rules;
 
         public static void Main(string[] args)
         {
             output = new ConsoleOutput();
+            input = new ConsoleInput();
             board = new Board();
             rules = new MainRules();
 
             board.MakeBoard(11);
-            rules.StartNewGame(board);
-
-            output.ShowBoard(board.GetBoard());
+            bool prepared = rules.PrepareNewGame(board, input);
+            if(prepared)
+            {
+                output.ShowBoard(board.GetBoard());
+            }else{
+                output.PrintString("Program unable to build board, aborting.");
+            }
         }
     }
 }
