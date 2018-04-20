@@ -8,6 +8,7 @@ namespace KingsTableConsoleEdition
         public ConsoleOutput()
         {
             Console.WriteLine("Welcome to 'King's Table: Console Edition'");
+            Console.WriteLine("-built by c.s.tilstra-");
         }
 
         public void ShowBoard(char[,] board)
@@ -20,7 +21,7 @@ namespace KingsTableConsoleEdition
             builder.Append("    ");
             for (int j = 0; j < board.GetLength(1); j++)
             {
-                builder.Append((char)(j + 97)); // convert to letters
+                builder.Append((char)(j + 97)); // convert to lowercase letters
                 builder.Append(" ");
             }
             Console.WriteLine(builder);

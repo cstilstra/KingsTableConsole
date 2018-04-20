@@ -35,7 +35,7 @@ namespace KingsTableConsoleEdition
                 int x = position[0];
                 int y = position[1];
                 currentBoard[x, y] = value;
-            }catch (System.Exception e)//TODO: catch index out of bounds exception
+            }catch (System.Exception e)//TODO: catch index out of bounds exception and null instance exception
             {
                 Console.WriteLine("");
                 Console.WriteLine("Error encountered in Board.cs");

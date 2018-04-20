@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Text;
 using KingsTableConsoleEdition.Interfaces;
 namespace KingsTableConsoleEdition
 {
     public class MainRules : IRules
     {
         Board board;
-        int[,] corners;
-        int[] throne;
         IPlayer attacker, defender;
         bool gameOver;
 
@@ -24,15 +23,17 @@ namespace KingsTableConsoleEdition
             gameOver = false;
         }
 
-        public void PrintIntro(IOutput output)
+        public string GetIntro()
         {
-            output.PrintString("-This is a custom King's Table ruleset-");
-            output.PrintString("-designed by c.s.tilstra and IVSugz-");
+            StringBuilder builder = new StringBuilder();
+            builder.AppendLine("");
+            builder.AppendLine("-This is a custom King's Table ruleset-");
+            builder.AppendLine("-designed by c.s.tilstra and IVSugz-");
+            return builder.ToString();
         }
-        public bool PrepareNewGame(Board newBoard, IInput input)
+
+        public bool PrepareNewGame(Board newBoard, IPlayer[] players)
         {
-            //TODO: Rules should create the board rather than have it passed in
-            // and the board should be owned by Rules rather than Program
             board = newBoard; 
             if (board.heightWidth == 11)
             {
@@ -42,7 +43,7 @@ namespace KingsTableConsoleEdition
                 board.PlaceKingOnThrone(kingChar);
                 PlaceAttackers();
                 PlaceDefenders();
-                CreatePlayers(input);
+                SetPlayers(players);
                 return true;
             }else{
                 Console.WriteLine("");
@@ -107,18 +108,23 @@ namespace KingsTableConsoleEdition
             board.SetPositionToValue(position, defenderChar);
         }
 
-        void CreatePlayers(IInput input)
+        void SetPlayers(IPlayer[] players)
         {
-            attacker = new HumanPlayer();
-            string prompt = "Please type the name of the Attacking player:";
-            attacker.SetName(input.GetStringFromPlayer(prompt));
-            defender = new HumanPlayer();
-            prompt = "Please type the name of the Defending player:";
-            defender.SetName(input.GetStringFromPlayer(prompt));
-
-            //TODO: remove
-            Console.WriteLine("Attacker: " + attacker.GetName());
-            Console.WriteLine("Defender: " + defender.GetName());
+            attacker = players[0];
+            defender = players[1];
+            try
+            {
+                attacker = players[0];
+                defender = players[1];
+            }
+            catch (System.Exception e)//TODO: catch index out of bounds exception and null instance exception
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Error encountered in MainRules.cs");
+                Console.WriteLine("SetPlayers()");
+                Console.WriteLine(e);
+                Console.WriteLine("");
+            }
         }
 
         public bool GameContinues()
@@ -126,7 +132,7 @@ namespace KingsTableConsoleEdition
             return !gameOver;
         }
 
-        public bool MoveIsValid()
+        public bool MoveIsValid(string[] move)
         {
             return true;
         }

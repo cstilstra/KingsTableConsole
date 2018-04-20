@@ -9,6 +9,7 @@ namespace KingsTableConsoleEdition
         static IInput input;
         static Board board;
         static IRules rules;
+        static IPlayer[] players;
 
         public static void Main(string[] args)
         {
@@ -17,19 +18,19 @@ namespace KingsTableConsoleEdition
             board = new Board();
             rules = new MainRules();
 
-            rules.PrintIntro(output);
             board.MakeBoard(11);
-            bool preparedToStart = rules.PrepareNewGame(board, input);
+            players = GetPlayers();
+            bool preparedToStart = rules.PrepareNewGame(board, players);
             if(preparedToStart)
             {
-                //TODO: output.PrintString(IRules.GetIntro());
+                output.PrintString(rules.GetIntro());
                 output.ShowBoard(board.GetBoard());
 
                 //main loop
                 while(rules.GameContinues())
                 {
                     string[] move = input.GetMoveFromPlayer();
-                    if(rules.MoveIsValid())
+                    if(rules.MoveIsValid(move))
                     {
                         rules.ApplyMove(move);
                         output.ShowBoard(board.GetBoard());
@@ -37,8 +38,24 @@ namespace KingsTableConsoleEdition
                 }
 
             }else{
-                output.PrintString("Program unable to build board, aborting.");
+                output.PrintString("Program unable to prepare game, aborting.");
             }
+        }
+
+        static IPlayer[] GetPlayers(){
+            IPlayer attacker = new HumanPlayer();
+            string prompt = "Please type the name of the Attacking player:";
+            attacker.SetName(input.GetStringFromPlayer(prompt));
+            IPlayer defender = new HumanPlayer();
+            prompt = "Please type the name of the Defending player:";
+            defender.SetName(input.GetStringFromPlayer(prompt));
+
+            //TODO: remove
+            Console.WriteLine("Attacker: " + attacker.GetName());
+            Console.WriteLine("Defender: " + defender.GetName());
+
+            IPlayer[] temp = new IPlayer[]{ attacker, defender };
+            return temp;
         }
     }
 }

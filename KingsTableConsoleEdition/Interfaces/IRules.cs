@@ -3,11 +3,10 @@ namespace KingsTableConsoleEdition.Interfaces
 {
     public interface IRules
     {
-        void PrintIntro(IOutput output);
-        //TODO: Rules should create the board rather than have it passed in
-        bool PrepareNewGame(Board newBoard, IInput input);
+        string GetIntro();
+        bool PrepareNewGame(Board newBoard, IPlayer[] players);
         bool GameContinues();
-        bool MoveIsValid();
+        bool MoveIsValid(string[] move);
         void ApplyMove(string[] move);
     }
 }
