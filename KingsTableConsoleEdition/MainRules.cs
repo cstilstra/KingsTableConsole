@@ -36,14 +36,12 @@ namespace KingsTableConsoleEdition
             board = newBoard; 
             if (board.heightWidth == 11)
             {
-                //TODO: Move to Board
-                CreateEmptySpaces();
-                MarkCornersAsGoals();
-                MarkCenterAsThrone();
-                // end Move to Board
+                board.CreateEmptySpaces(emptyChar);
+                board.MarkCornersAsGoals(goalChar);
+                board.MarkCenterAsThrone(throneChar);
+                board.PlaceKingOnThrone(kingChar);
                 PlaceAttackers();
                 PlaceDefenders();
-                PlaceKingOnThrone();
                 CreatePlayers(input);
                 return true;
             }else{
@@ -56,40 +54,6 @@ namespace KingsTableConsoleEdition
         }
 
         // Non Interface defined functions below
-
-        void CreateEmptySpaces()
-        {
-            for (int i = 0; i < 11; i++)
-            {
-                for (int j = 0; j < 11; j++)
-                {
-                    int[] position = { i, j };
-                    board.SetPositionToValue(position, emptyChar);
-                }
-            }
-        }
-
-        void MarkCornersAsGoals()
-        {
-            FindCorners();
-            for (int i = 0; i < corners.GetLength(0); i++)
-            {
-                int[] position = { corners[i, 0], corners[i, 1] };
-                board.SetPositionToValue(position, goalChar);
-            }
-        }
-
-        void FindCorners()
-        {
-            corners = new[,] {{0,0}, {0,10}, {10,0},
-                              {10,10} };
-        }
-
-        void MarkCenterAsThrone()
-        {
-            throne = new int[]{ 5, 5};
-            board.SetPositionToValue(throne, throneChar);
-        }
 
         void PlaceAttackers()
         {
@@ -143,12 +107,6 @@ namespace KingsTableConsoleEdition
             board.SetPositionToValue(position, defenderChar);
         }
 
-        void PlaceKingOnThrone()
-        {
-            int[] position = new int[] { 5, 5 };
-            board.SetPositionToValue(throne, kingChar);
-        }
-
         void CreatePlayers(IInput input)
         {
             attacker = new HumanPlayer();
@@ -165,7 +123,7 @@ namespace KingsTableConsoleEdition
 
         public bool GameContinues()
         {
-            return true;
+            return !gameOver;
         }
 
         public bool MoveIsValid()

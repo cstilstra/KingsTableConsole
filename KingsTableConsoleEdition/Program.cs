@@ -22,12 +22,10 @@ namespace KingsTableConsoleEdition
             bool preparedToStart = rules.PrepareNewGame(board, input);
             if(preparedToStart)
             {
-                //TODO: move output.ShowBoard call once main loop implemented
-                //output.ShowBoard(board.GetBoard());
-
                 //TODO: output.PrintString(IRules.GetIntro());
+                output.ShowBoard(board.GetBoard());
 
-                //TODO: main loop goes here
+                //main loop
                 while(rules.GameContinues())
                 {
                     string[] move = input.GetMoveFromPlayer();
