@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using KingsTableConsoleEdition.Interfaces;
 namespace KingsTableConsoleEdition
@@ -71,25 +72,79 @@ namespace KingsTableConsoleEdition
         public void ApplyMove(int[][] move)
         {
             Console.WriteLine("Applying Move");
+            //Console.Write(move[0][0]);
+            //Console.WriteLine(move[0][1]);
 
             //clear display characters
 
             //display moves for unit at first position
-            int[][] moves = GetMovesForPieceAt(move[0]);
-            for (int i = 0; i < moves.Length; i++){
-                int[] position = new int[] { moves[i][0], moves[i][1] };
+            List<int[]> moves = GetMovesForPieceAt(move[0]);
+            for (int i = 0; i < moves.Count; i++){
+                int[] position ={ moves[i][0], moves[i][1] };
                 board.SetPositionToValue(position, displayChar);
             }
             //try to move unit to second position, then clear display characters
                 //if move fails then catch and do nothing
         }
 
-        public int[][] GetMovesForPieceAt(int[] position)
+        public List<int[]> GetMovesForPieceAt(int[] position)
         {
-            int[] test = new int[] { 1, 1 };
-            int[] test2 = new int[] { 1, 2 };
-            int[][] toReturn = {test, test2};
-            return toReturn;
+            int y = position[0];
+            int x = position[1];
+            //Console.Write("y = " + y);
+            //Console.WriteLine(", x = " + x);
+            List<int[]> moves = new List<int[]>();
+
+            // look up
+            for (int i = y - 1; i >= 0; i--){
+                int[] tempPosition = { i, x };
+                char occupant = board.GetValueAt(tempPosition);
+                if(occupant == emptyChar){
+                    moves.Add(tempPosition);
+                }else{
+                    break;
+                }
+            }
+            // look right
+            for (int i = x + 1; i <= 10; i++)
+            {
+                int[] tempPosition = { y, i };
+                char occupant = board.GetValueAt(tempPosition);
+                if (occupant == emptyChar)
+                {
+                    moves.Add(tempPosition);
+                }else{
+                    break;
+                }
+            }
+            // look down
+            for (int i = y + 1; i <= 10; i++)
+            {
+                int[] tempPosition = { i, x };
+                char occupant = board.GetValueAt(tempPosition);
+                if (occupant == emptyChar)
+                {
+                    moves.Add(tempPosition);
+                }else
+                {
+                    break;
+                }
+            }
+            // look left
+            for (int i = x - 1; i >= 0; i--)
+            {
+                int[] tempPosition = { y, i };
+                char occupant = board.GetValueAt(tempPosition);
+                if (occupant == emptyChar)
+                {
+                    moves.Add(tempPosition);
+                }else
+                {
+                    break;
+                }
+            }
+
+            return moves;
         }
 
 

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace KingsTableConsoleEdition.Interfaces
 {
     public interface IRules
@@ -8,6 +10,6 @@ namespace KingsTableConsoleEdition.Interfaces
         bool GameContinues();
         bool MoveIsValid(int[][] move);
         void ApplyMove(int[][] move);
-        int[][] GetMovesForPieceAt(int[] position);
+        List<int[]> GetMovesForPieceAt(int[] position);
     }
 }

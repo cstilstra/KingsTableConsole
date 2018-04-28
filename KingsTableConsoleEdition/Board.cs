@@ -29,6 +29,11 @@ namespace KingsTableConsoleEdition
             return currentBoard;
         }
 
+        public char GetValueAt(int[] position)
+        {
+            return currentBoard[position[0], position[1]];
+        }
+
         public void SetPositionToValue(int[] position, char value)
         {
             try
