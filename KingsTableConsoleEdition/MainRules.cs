@@ -9,7 +9,7 @@ namespace KingsTableConsoleEdition
         IPlayer attacker, defender;
         bool gameOver;
 
-        char emptyChar, goalChar, throneChar, attackerChar, defenderChar, kingChar;
+        char emptyChar, goalChar, throneChar, attackerChar, defenderChar, kingChar, displayChar;
 
         public MainRules()
         {
@@ -19,6 +19,7 @@ namespace KingsTableConsoleEdition
             attackerChar = 'A';
             defenderChar = 'D';
             kingChar = 'K';
+            displayChar = '0';
 
             gameOver = false;
         }
@@ -54,7 +55,46 @@ namespace KingsTableConsoleEdition
             }
         }
 
+        public bool GameContinues()
+        {
+            return !gameOver;
+        }
+
+        public bool MoveIsValid(int[][] move)
+        {
+            //check that the first position is not empty
+            //check that the character at first position belongs to current player
+            //check that character at first position can move to second position
+            return true; 
+        }
+
+        public void ApplyMove(int[][] move)
+        {
+            Console.WriteLine("Applying Move");
+
+            //clear display characters
+
+            //display moves for unit at first position
+            int[][] moves = GetMovesForPieceAt(move[0]);
+            for (int i = 0; i < moves.Length; i++){
+                int[] position = new int[] { moves[i][0], moves[i][1] };
+                board.SetPositionToValue(position, displayChar);
+            }
+            //try to move unit to second position, then clear display characters
+                //if move fails then catch and do nothing
+        }
+
+        public int[][] GetMovesForPieceAt(int[] position)
+        {
+            int[] test = new int[] { 1, 1 };
+            int[] test2 = new int[] { 1, 2 };
+            int[][] toReturn = {test, test2};
+            return toReturn;
+        }
+
+
         // Non Interface defined functions below
+
 
         void PlaceAttackers()
         {
@@ -125,21 +165,6 @@ namespace KingsTableConsoleEdition
                 Console.WriteLine(e);
                 Console.WriteLine("");
             }
-        }
-
-        public bool GameContinues()
-        {
-            return !gameOver;
-        }
-
-        public bool MoveIsValid(string[] move)
-        {
-            return true;
-        }
-
-        public void ApplyMove(string[] move)
-        {
-            
-        }
+        }       
     }
 }

@@ -6,7 +6,8 @@ namespace KingsTableConsoleEdition.Interfaces
         string GetIntro();
         bool PrepareNewGame(Board newBoard, IPlayer[] players);
         bool GameContinues();
-        bool MoveIsValid(string[] move);
-        void ApplyMove(string[] move);
+        bool MoveIsValid(int[][] move);
+        void ApplyMove(int[][] move);
+        int[][] GetMovesForPieceAt(int[] position);
     }
 }

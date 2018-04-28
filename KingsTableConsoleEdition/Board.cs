@@ -8,6 +8,7 @@ namespace KingsTableConsoleEdition
         char[,] currentBoard;
         int[,] corners;
         int[] throne;
+        char empty;
 
         public Board()
         {
@@ -47,12 +48,13 @@ namespace KingsTableConsoleEdition
 
         public void CreateEmptySpaces(char emptyChar)
         {
+            empty = emptyChar;
             for (int i = 0; i < 11; i++)
             {
                 for (int j = 0; j < 11; j++)
                 {
                     int[] position = { i, j };
-                    SetPositionToValue(position, emptyChar);
+                    SetPositionToValue(position, empty);
                 }
             }
         }
@@ -75,14 +77,32 @@ namespace KingsTableConsoleEdition
 
         public void MarkCenterAsThrone(char throneChar)
         {
-            throne = new int[] { 5, 5 };
+            throne = new int[]{ 5, 5 };
             SetPositionToValue(throne, throneChar);
         }
 
         public void PlaceKingOnThrone(char kingChar)
         {
-            int[] position = new int[] { 5, 5 };
+            int[] position = { 5, 5 };
             SetPositionToValue(throne, kingChar);
+        }
+
+        public void RemovePieceAt(int[] position)
+        {
+            SetPositionToValue(position, empty);
+        }
+
+        public void MovePiece(int[] piecePosition, int[] destinationPosition)
+        {
+            // get the piece at piecePosition
+            char piece = currentBoard[piecePosition[0], piecePosition[1]];
+            // check that piece is not empty
+            if(!piece.Equals(empty))
+            {
+                // move piece
+                RemovePieceAt(piecePosition);
+                SetPositionToValue(destinationPosition, piece);
+            }
         }
     }
 }
