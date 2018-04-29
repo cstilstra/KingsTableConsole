@@ -10,7 +10,8 @@ namespace KingsTableConsoleEdition
         IPlayer attacker, defender;
         bool gameOver;
 
-        char emptyChar, goalChar, throneChar, attackerChar, defenderChar, kingChar, displayChar;
+        char emptyChar, goalChar, throneChar, attackerChar, defenderChar, kingChar, highlightChar;
+        List<int[]> highlighted;
 
         public MainRules()
         {
@@ -20,7 +21,9 @@ namespace KingsTableConsoleEdition
             attackerChar = 'A';
             defenderChar = 'D';
             kingChar = 'K';
-            displayChar = '0';
+            highlightChar = '0';
+
+            highlighted = new List<int[]>();
 
             gameOver = false;
         }
@@ -65,26 +68,45 @@ namespace KingsTableConsoleEdition
         {
             //check that the first position is not empty
             //check that the character at first position belongs to current player
+            //check if there is a destination position and return true if not
+            if(move[1].Length == 0){
+                return true;
+            }
             //check that character at first position can move to second position
-            return true; 
+            List<int[]> moves = GetMovesForPieceAt(move[0]);
+            for (int i = 0; i < moves.Count; i++)
+            {
+                int[] position = { moves[i][0], moves[i][1] };
+                if(position[0] == move[1][0] & position[1] == move[1][1]){
+                    return true;
+                }
+            }
+            Console.WriteLine("That piece cannot move there.");
+            return false; 
         }
 
         public void ApplyMove(int[][] move)
         {
-            Console.WriteLine("Applying Move");
-            //Console.Write(move[0][0]);
-            //Console.WriteLine(move[0][1]);
-
             //clear display characters
-
+            RemoveHighlights();
             //display moves for unit at first position
             List<int[]> moves = GetMovesForPieceAt(move[0]);
             for (int i = 0; i < moves.Count; i++){
                 int[] position ={ moves[i][0], moves[i][1] };
-                board.SetPositionToValue(position, displayChar);
+                board.SetPositionToValue(position, highlightChar);
             }
+            highlighted = moves;
             //try to move unit to second position, then clear display characters
-                //if move fails then catch and do nothing
+            char pieceMoving = board.GetValueAt(move[0]);
+            try{
+                board.MovePiece(move[0], move[1]);
+                RemoveHighlights();
+            }catch(IndexOutOfRangeException e){
+                //Console.WriteLine(e);
+                board.SetPositionToValue(move[0], pieceMoving);
+            }catch(Exception ex){
+                Console.WriteLine(ex);
+            }
         }
 
         public List<int[]> GetMovesForPieceAt(int[] position)
@@ -99,7 +121,7 @@ namespace KingsTableConsoleEdition
             for (int i = y - 1; i >= 0; i--){
                 int[] tempPosition = { i, x };
                 char occupant = board.GetValueAt(tempPosition);
-                if(occupant == emptyChar){
+                if(occupant == emptyChar || occupant == highlightChar){
                     moves.Add(tempPosition);
                 }else{
                     break;
@@ -110,7 +132,7 @@ namespace KingsTableConsoleEdition
             {
                 int[] tempPosition = { y, i };
                 char occupant = board.GetValueAt(tempPosition);
-                if (occupant == emptyChar)
+                if (occupant == emptyChar || occupant == highlightChar)
                 {
                     moves.Add(tempPosition);
                 }else{
@@ -122,7 +144,7 @@ namespace KingsTableConsoleEdition
             {
                 int[] tempPosition = { i, x };
                 char occupant = board.GetValueAt(tempPosition);
-                if (occupant == emptyChar)
+                if (occupant == emptyChar || occupant == highlightChar)
                 {
                     moves.Add(tempPosition);
                 }else
@@ -135,7 +157,7 @@ namespace KingsTableConsoleEdition
             {
                 int[] tempPosition = { y, i };
                 char occupant = board.GetValueAt(tempPosition);
-                if (occupant == emptyChar)
+                if(occupant == emptyChar || occupant == highlightChar)
                 {
                     moves.Add(tempPosition);
                 }else
@@ -220,6 +242,17 @@ namespace KingsTableConsoleEdition
                 Console.WriteLine(e);
                 Console.WriteLine("");
             }
-        }       
+        }
+
+        void RemoveHighlights()
+        {
+            for (int i = 0; i < highlighted.Count; i++)
+            {
+                if (board.GetValueAt(highlighted[i]) == highlightChar)
+                {
+                    board.SetPositionToValue(highlighted[i], emptyChar);
+                }
+            }
+        }
     }
 }

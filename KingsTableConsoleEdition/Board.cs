@@ -10,6 +10,7 @@ namespace KingsTableConsoleEdition
         int[] throne;
         char empty;
 
+
         public Board()
         {
         }
@@ -41,12 +42,15 @@ namespace KingsTableConsoleEdition
                 int x = position[0];
                 int y = position[1];
                 currentBoard[x, y] = value;
-            }catch (System.Exception e)//TODO: catch index out of bounds exception and null instance exception
+            }catch (IndexOutOfRangeException e)//TODO: catch index out of bounds exception and null instance exception
+            {
+                throw e;
+            }catch (Exception ex)
             {
                 Console.WriteLine("");
                 Console.WriteLine("Error encountered in Board.cs");
                 Console.WriteLine("SetPositionToValue()");
-                Console.WriteLine(e);
+                Console.WriteLine(ex);
                 Console.WriteLine("");
             }
         }

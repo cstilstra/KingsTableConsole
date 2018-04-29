@@ -54,7 +54,7 @@ namespace KingsTableConsoleEdition
             Console.WriteLine("Attacker: " + attacker.GetName());
             Console.WriteLine("Defender: " + defender.GetName());
 
-            IPlayer[] temp = new IPlayer[]{ attacker, defender };
+            IPlayer[] temp = { attacker, defender };
             return temp;
         }
     }
