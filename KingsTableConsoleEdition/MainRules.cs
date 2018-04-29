@@ -45,6 +45,7 @@ namespace KingsTableConsoleEdition
                 board.CreateEmptySpaces(emptyChar);
                 board.MarkCornersAsGoals(goalChar);
                 board.MarkCenterAsThrone(throneChar);
+                board.SetEmptyBoard(board.GetBoard());
                 board.PlaceKingOnThrone(kingChar);
                 PlaceAttackers();
                 PlaceDefenders();
@@ -109,7 +110,7 @@ namespace KingsTableConsoleEdition
             }
         }
 
-        public List<int[]> GetMovesForPieceAt(int[] position)
+        public List<int[]> GetMovesForPieceAt(int[] position) //TODO: allow the King to move to the throne and the goals
         {
             int y = position[0];
             int x = position[1];
@@ -234,7 +235,7 @@ namespace KingsTableConsoleEdition
                 attacker = players[0];
                 defender = players[1];
             }
-            catch (System.Exception e)//TODO: catch index out of bounds exception and null instance exception
+            catch (System.Exception e)//TODO: catch null instance exception
             {
                 Console.WriteLine("");
                 Console.WriteLine("Error encountered in MainRules.cs");

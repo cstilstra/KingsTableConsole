@@ -5,6 +5,7 @@ namespace KingsTableConsoleEdition
     {
 
         public int heightWidth;
+        char[,] emptyBoard;
         char[,] currentBoard;
         int[,] corners;
         int[] throne;
@@ -19,6 +20,7 @@ namespace KingsTableConsoleEdition
         {
             heightWidth = height;
             currentBoard = new char[heightWidth, heightWidth];
+            emptyBoard = new char[heightWidth, heightWidth];
         }
 
         public void SetBoard(char[,] newBoard){
@@ -52,6 +54,15 @@ namespace KingsTableConsoleEdition
                 Console.WriteLine("SetPositionToValue()");
                 Console.WriteLine(ex);
                 Console.WriteLine("");
+            }
+        }
+
+        public void SetEmptyBoard(char[,] board)
+        {
+            for (int i = 0; i < board.GetLength(0); i++){
+                for (int j = 0; j < board.GetLength(1); j++){
+                    emptyBoard[i, j] = board[i, j];
+                }
             }
         }
 
@@ -98,7 +109,8 @@ namespace KingsTableConsoleEdition
 
         public void RemovePieceAt(int[] position)
         {
-            SetPositionToValue(position, empty);
+            char emptyValue = emptyBoard[position[0], position[1]];
+            SetPositionToValue(position, emptyValue);
         }
 
         public void MovePiece(int[] piecePosition, int[] destinationPosition)

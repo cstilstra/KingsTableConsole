@@ -32,10 +32,6 @@ namespace KingsTableConsoleEdition
                 builder.Append((char)(i + 97)); // convert to lowercase letters
                 builder.Append(" ");
 
-                //if (i < 9) builder.Append(" ");
-                //builder.Append(i + 1);
-                //builder.Append(" ");
-
                 // add rest of line
                 builder.Append(separator);
                 for (int j = 0; j < board.GetLength(1); j++)
