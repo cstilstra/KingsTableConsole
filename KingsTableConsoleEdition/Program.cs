@@ -29,11 +29,8 @@ namespace KingsTableConsoleEdition
                 //main loop
                 while(rules.GameContinues())
                 {
-                    int[][] move = input.GetMoveFromPlayer();
-                    if(rules.MoveIsValid(move)) // TODO: move this check to rules
-                    {
-                        rules.ApplyMove(move);
-                    }
+                    int[][] move = input.GetMoveFromPlayer();                   
+                    rules.ApplyMove(move);
                     output.ShowBoard(board.GetBoard());
                 }
 

@@ -10,10 +10,11 @@ namespace KingsTableConsoleEdition
         IPlayer attacker, defender;
         bool gameOver;
 
-        char emptyChar, goalChar, throneChar, attackerChar, defenderChar, kingChar, highlightChar;
+		char emptyChar, goalChar, throneChar, attackerChar, defenderChar, kingChar, highlightChar; //TODO: make enum
         List<int[]> highlighted;
+		int[] kingPosition;
 
-        public MainRules()
+		public MainRules()
         {
             emptyChar = '_';
             goalChar = 'X';
@@ -46,7 +47,7 @@ namespace KingsTableConsoleEdition
                 board.MarkCornersAsGoals(goalChar);
                 board.MarkCenterAsThrone(throneChar);
                 board.SetEmptyBoard(board.GetBoard());
-                board.PlaceKingOnThrone(kingChar);
+                PlaceKingOnThrone();
                 PlaceAttackers();
                 PlaceDefenders();
                 SetPlayers(players);
@@ -67,8 +68,8 @@ namespace KingsTableConsoleEdition
 
         public bool MoveIsValid(int[][] move)
         {
-            //check that the first position is not empty
-            //check that the character at first position belongs to current player
+			//TODO: check that the first position is not empty
+			//TODO: check that the character at first position belongs to current player
             //check if there is a destination position and return true if not
             if(move[1].Length == 0){
                 return true;
@@ -88,30 +89,49 @@ namespace KingsTableConsoleEdition
 
         public void ApplyMove(int[][] move)
         {
-            //clear display characters
-            RemoveHighlights();
-            //display moves for unit at first position
-            List<int[]> moves = GetMovesForPieceAt(move[0]);
-            for (int i = 0; i < moves.Count; i++){
-                int[] position ={ moves[i][0], moves[i][1] };
-                board.SetPositionToValue(position, highlightChar);
-            }
-            highlighted = moves;
-            //try to move unit to second position, then clear display characters
-            char pieceMoving = board.GetValueAt(move[0]);
-            try{
-                board.MovePiece(move[0], move[1]);
-                RemoveHighlights();
-            }catch(IndexOutOfRangeException e){
-                //Console.WriteLine(e);
-                board.SetPositionToValue(move[0], pieceMoving);
-            }catch(Exception ex){
-                Console.WriteLine(ex);
-            }
+			if (MoveIsValid(move))
+			{
+				//clear display characters
+				RemoveHighlights();
+				//display moves for unit at first position
+				//TODO: make function
+				List<int[]> moves = GetMovesForPieceAt(move[0]);
+				for (int i = 0; i < moves.Count; i++)
+				{
+					int[] position = { moves[i][0], moves[i][1] };
+					board.SetPositionToValue(position, highlightChar);
+				}
+				highlighted = moves;
+				//try to move unit to second position, then clear display characters
+				char pieceMoving = board.GetValueAt(move[0]);
+				try
+				{
+					board.MovePiece(move[0], move[1]);
+					RemoveHighlights();
+					if(board.GetValueAt(move[1]) == kingChar){
+						kingPosition = move[1];
+					}
+				}
+				catch (IndexOutOfRangeException e)
+				{
+					//Console.WriteLine(e);
+
+                    //set piece back to original position
+					board.SetPositionToValue(move[0], pieceMoving); 
+				}
+				catch (Exception ex)
+				{
+					Console.WriteLine(ex);
+				}
+
+				CheckForCapture(move[1]);
+                CheckForWin();
+			}
         }
 
         public List<int[]> GetMovesForPieceAt(int[] position) //TODO: allow the King to move to the throne and the goals
         {
+			char moving = board.GetValueAt(position);
             int y = position[0];
             int x = position[1];
             //Console.Write("y = " + y);
@@ -122,7 +142,9 @@ namespace KingsTableConsoleEdition
             for (int i = y - 1; i >= 0; i--){
                 int[] tempPosition = { i, x };
                 char occupant = board.GetValueAt(tempPosition);
-                if(occupant == emptyChar || occupant == highlightChar){
+				if(moving == kingChar && board.PositionIsReservedForKing(tempPosition)){
+					moves.Add(tempPosition);
+				}else if(occupant == emptyChar || occupant == highlightChar){
                     moves.Add(tempPosition);
                 }else{
                     break;
@@ -131,12 +153,19 @@ namespace KingsTableConsoleEdition
             // look right
             for (int i = x + 1; i <= 10; i++)
             {
+				//TODO: make function
                 int[] tempPosition = { y, i };
                 char occupant = board.GetValueAt(tempPosition);
-                if (occupant == emptyChar || occupant == highlightChar)
+				if (moving == kingChar && board.PositionIsReservedForKing(tempPosition))
                 {
                     moves.Add(tempPosition);
-                }else{
+                }
+                else if (occupant == emptyChar || occupant == highlightChar)
+                {
+                    moves.Add(tempPosition);
+                }
+                else
+                {
                     break;
                 }
             }
@@ -145,10 +174,15 @@ namespace KingsTableConsoleEdition
             {
                 int[] tempPosition = { i, x };
                 char occupant = board.GetValueAt(tempPosition);
-                if (occupant == emptyChar || occupant == highlightChar)
+				if (moving == kingChar && board.PositionIsReservedForKing(tempPosition))
                 {
                     moves.Add(tempPosition);
-                }else
+                }
+                else if (occupant == emptyChar || occupant == highlightChar)
+                {
+                    moves.Add(tempPosition);
+                }
+                else
                 {
                     break;
                 }
@@ -158,10 +192,15 @@ namespace KingsTableConsoleEdition
             {
                 int[] tempPosition = { y, i };
                 char occupant = board.GetValueAt(tempPosition);
-                if(occupant == emptyChar || occupant == highlightChar)
+				if (moving == kingChar && board.PositionIsReservedForKing(tempPosition))
                 {
                     moves.Add(tempPosition);
-                }else
+                }
+                else if (occupant == emptyChar || occupant == highlightChar)
+                {
+                    moves.Add(tempPosition);
+                }
+                else
                 {
                     break;
                 }
@@ -173,6 +212,10 @@ namespace KingsTableConsoleEdition
 
         // Non Interface defined functions below
 
+		void PlaceKingOnThrone(){
+			board.SetPositionToValue(board.throne, kingChar);
+			kingPosition = board.throne;
+		}
 
         void PlaceAttackers()
         {
@@ -245,8 +288,7 @@ namespace KingsTableConsoleEdition
             }
         }
 
-        void RemoveHighlights()
-        {
+		void RemoveHighlights(){
             for (int i = 0; i < highlighted.Count; i++)
             {
                 if (board.GetValueAt(highlighted[i]) == highlightChar)
@@ -255,5 +297,78 @@ namespace KingsTableConsoleEdition
                 }
             }
         }
+        
+		void CheckForCapture(int [] position){
+			char pieceAt = board.GetValueAt(position);
+			if (pieceAt == attackerChar || pieceAt == defenderChar)
+			{
+				//TODO: create helper function
+				// look at each neighboring space checking for enemy
+				//up
+				int[] adjacentPosition = { position[0] - 1, position[1] };
+				char adjacentPiece = board.GetValueAt(adjacentPosition);
+				if((adjacentPiece == attackerChar || adjacentPiece == defenderChar) && 
+				   (adjacentPiece != pieceAt)){
+					// look at the piece beyond
+					int[] beyondPosition = new int[]{ position[0] - 2, position[1] };
+					char nextPiece = board.GetValueAt(beyondPosition);
+					if(nextPiece == pieceAt){
+						board.RemovePieceAt(adjacentPosition);
+						Console.WriteLine("Piece removed");
+					}
+				}
+                //down
+				adjacentPosition = new int[]{ position[0] + 1, position[1] };
+                adjacentPiece = board.GetValueAt(adjacentPosition);
+                if ((adjacentPiece == attackerChar || adjacentPiece == defenderChar) &&
+                   (adjacentPiece != pieceAt))
+                {
+                    // look at the piece beyond
+                    int[] beyondPosition = new int[] { position[0] + 2, position[1] };
+                    char nextPiece = board.GetValueAt(beyondPosition);
+                    if (nextPiece == pieceAt)
+                    {
+                        board.RemovePieceAt(adjacentPosition);
+                        Console.WriteLine("Piece removed");
+                    }
+                }
+                //left
+				adjacentPosition = new int[] { position[0], position[1] - 1 };
+                adjacentPiece = board.GetValueAt(adjacentPosition);
+                if ((adjacentPiece == attackerChar || adjacentPiece == defenderChar) &&
+                   (adjacentPiece != pieceAt))
+                {
+                    // look at the piece beyond
+                    int[] beyondPosition = new int[] { position[0], position[1] -2 };
+                    char nextPiece = board.GetValueAt(beyondPosition);
+                    if (nextPiece == pieceAt)
+                    {
+                        board.RemovePieceAt(adjacentPosition);
+                        Console.WriteLine("Piece removed");
+                    }
+                }
+                //right
+				adjacentPosition = new int[] { position[0], position[1] + 1 };
+                adjacentPiece = board.GetValueAt(adjacentPosition);
+                if ((adjacentPiece == attackerChar || adjacentPiece == defenderChar) &&
+                   (adjacentPiece != pieceAt))
+                {
+                    // look at the piece beyond
+                    int[] beyondPosition = new int[] { position[0], position[1] + 2 };
+                    char nextPiece = board.GetValueAt(beyondPosition);
+                    if (nextPiece == pieceAt)
+                    {
+                        board.RemovePieceAt(adjacentPosition);
+                        Console.WriteLine("Piece removed");
+                    }
+                }
+			}
+		}
+
+		void CheckForWin(){
+			//check if King is surrounded
+
+            //check if King is in corner
+		}
     }
 }

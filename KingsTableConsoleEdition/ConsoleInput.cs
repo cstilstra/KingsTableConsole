@@ -47,12 +47,18 @@ namespace KingsTableConsoleEdition
 
         int[] TransformStringToPosition(string inputString)
         {
-            char toTransform = inputString.Substring(0, 1).ToCharArray()[0];
-            int transformedA = (Convert.ToInt32(toTransform) - 97);
-            toTransform = inputString.Substring(1).ToCharArray()[0];
-            int transformedB = (Convert.ToInt32(toTransform) - 108);
-            return new int[]{transformedA, transformedB};
+			try
+			{
+				char toTransform = inputString.Substring(0, 1).ToCharArray()[0];
+				int transformedA = (Convert.ToInt32(toTransform) - 97);
+				toTransform = inputString.Substring(1).ToCharArray()[0];
+				int transformedB = (Convert.ToInt32(toTransform) - 108);
+				return new int[] { transformedA, transformedB };
+			}catch(IndexOutOfRangeException ex){
+				
+			}
 
+			return new int[] { -1, -1};
         }
     }
 }

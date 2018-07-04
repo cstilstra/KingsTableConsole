@@ -7,14 +7,9 @@ namespace KingsTableConsoleEdition
         public int heightWidth;
         char[,] emptyBoard;
         char[,] currentBoard;
-        int[,] corners;
-        int[] throne;
+        public int[,] corners;
+        public int[] throne;
         char empty;
-
-
-        public Board()
-        {
-        }
 
         public void MakeBoard(int height)
         {
@@ -34,7 +29,12 @@ namespace KingsTableConsoleEdition
 
         public char GetValueAt(int[] position)
         {
-            return currentBoard[position[0], position[1]];
+			try
+			{
+				return currentBoard[position[0], position[1]];
+			}catch(IndexOutOfRangeException e){
+				return empty;
+			}
         }
 
         public void SetPositionToValue(int[] position, char value)
@@ -102,8 +102,7 @@ namespace KingsTableConsoleEdition
         }
 
         public void PlaceKingOnThrone(char kingChar)
-        {
-            int[] position = { 5, 5 };
+		{
             SetPositionToValue(throne, kingChar);
         }
 
@@ -125,5 +124,19 @@ namespace KingsTableConsoleEdition
                 SetPositionToValue(destinationPosition, piece);
             }
         }
+
+		public bool PositionIsReservedForKing(int[] position){
+			for (int i = 0; i < corners.GetLength(0); i++)
+            {
+				int[] corner = { corners[i, 0], corners[i, 1] };
+				if(position[0] == corner[0] && position[1] == corner[1]){
+					return true;
+				}                
+            }
+			if(position[0] == throne[0] && position[1] == throne[1]){
+				return true;
+			}
+			return false;
+		}
     }
 }
