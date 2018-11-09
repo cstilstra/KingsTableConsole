@@ -2,50 +2,55 @@
 using KingsTableConsoleEdition.Interfaces;
 namespace KingsTableConsoleEdition
 {
-    class MainClass
+    class Program
     {
 
-        static IOutput output;
-        static IInput input;
+        static IOutput _output;
+        static IInput _input;
         static Board board;
         static IRules rules;
         static IPlayer[] players;
 
-        public static void Main(string[] args)
+        public Program(IInput input, IOutput output)
         {
-            output = new ConsoleOutput();
-            input = new ConsoleInput();
+            _input = input;
+            _output = output;
+
             board = new Board();
             rules = new MainRules();
+        }
+
+        public void Run() {
 
             board.MakeBoard(11);
             players = GetPlayers();
             bool preparedToStart = rules.PrepareNewGame(board, players);
-            if(preparedToStart)
+            if (preparedToStart)
             {
-                output.PrintString(rules.GetIntro());
-                output.ShowBoard(board.GetBoard());
+                _output.PrintString(rules.GetIntro());
+                _output.ShowBoard(board.GetBoard());
 
                 //main loop
-                while(rules.GameContinues())
+                while (rules.GameContinues())
                 {
-                    int[][] move = input.GetMoveFromPlayer();                   
+                    int[][] move = _input.GetMoveFromPlayer();
                     rules.ApplyMove(move);
-                    output.ShowBoard(board.GetBoard());
+                    _output.ShowBoard(board.GetBoard());
                 }
 
-            }else{
-                output.PrintString("Program unable to prepare game, aborting.");
+            } else {
+                _output.PrintString("Program unable to prepare game, aborting.");
             }
         }
+    
 
         static IPlayer[] GetPlayers(){
             IPlayer attacker = new HumanPlayer();
             string prompt = "Please type the name of the Attacking player:";
-            attacker.SetName(input.GetStringFromPlayer(prompt));
+            attacker.SetName(_input.GetStringFromPlayer(prompt));
             IPlayer defender = new HumanPlayer();
             prompt = "Please type the name of the Defending player:";
-            defender.SetName(input.GetStringFromPlayer(prompt));
+            defender.SetName(_input.GetStringFromPlayer(prompt));
 
             //TODO: remove
             Console.WriteLine("Attacker: " + attacker.GetName());
